@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: archecker-container
-        image: registry.lts.harvard.edu/lts/archivesspace-checker-dev:latest
+        image: registry.lts.harvard.edu/lts/archivesspace-checker-dev:sandbox
         ports:
         - containerPort: 9292
         env:
