@@ -1,49 +1,37 @@
 --- 
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: archecker-deployment
-  namespace: development
-  labels:
-    app: archecker
+  name: archecker-container
 spec:
-  replicas: 1
+  replicas: 3
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: archecker
+      app: archecker-container
   template:
     metadata:
       labels:
-        app: archecker
+        app: archecker-container
     spec:
       containers:
-      - name: archecker-container
-        image: gcr.io/heptio-images/ks-guestbook-demo:0.2 #registry.lts.harvard.edu/lts/archivesspace-checker-dev:sandbox
+      - image: registry.lts.harvard.edu/lts/archivesspace-checker-dev:sandbox
+        name: archecker-container
         ports:
-        - containerPort: 80 #9292 
-        env:
-          - name: POD_NAME
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.name
-          - name: POD_NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
-          - name: POD_IP
-            valueFrom:
-              fieldRef:
-                fieldPath: status.podIP
+        - containerPort: 9292
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
-  name: archecker-ui
+  name: archecker-container
 spec:
   type: NodePort
   ports:
-  - port: 80 #9292
-    targetPort: 80 #9292
-    nodePort: 30001 
+  - port: 9292
+    targetPort: 9292
+    nodePort: 30003
   selector:
-    app: archecker
+    app: archecker-container
